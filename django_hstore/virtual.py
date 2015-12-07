@@ -19,9 +19,6 @@ class HStoreVirtualMixin(object):
     concrete = False
 
     def contribute_to_class(self, cls, name):
-        if self.choices:
-            setattr(cls, 'get_%s_display' % self.name,
-                    curry(cls._get_FIELD_display, field=self))
         self.attname = name
         self.name = name
         self.model = cls
@@ -37,6 +34,9 @@ class HStoreVirtualMixin(object):
             cls._meta.add_field(self)
             # add also into virtual fields in order to support admin
             cls._meta.virtual_fields.append(self)
+        if self.choices:
+            setattr(cls, 'get_%s_display' % self.name,
+                    curry(cls._get_FIELD_display, field=self))
 
     def db_type(self, connection):
         """
